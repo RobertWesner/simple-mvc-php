@@ -9,12 +9,15 @@ final readonly class Request
     public function __construct(array $parameters)
     {
         foreach ($parameters as &$parameter) {
-            if (strtolower($parameter) === 'null') {
-                $parameter = null;
-            } elseif (filter_var($parameter, FILTER_VALIDATE_INT)) {
-                $parameter = (int)$parameter;
-            } elseif (filter_var($parameter, FILTER_VALIDATE_BOOL)) {
-                $parameter = ['true' => true, 'false' => false][$parameter];
+            // GET or POST
+            if (is_string($parameter)) {
+                if (strtolower($parameter) === 'null') {
+                    $parameter = null;
+                } elseif (filter_var($parameter, FILTER_VALIDATE_INT)) {
+                    $parameter = (int)$parameter;
+                } elseif (filter_var($parameter, FILTER_VALIDATE_BOOL)) {
+                    $parameter = ['true' => true, 'false' => false][$parameter];
+                }
             }
         }
 

@@ -10,8 +10,13 @@ final class Router
 
     private function getFiles(string $directory): array
     {
+        $files = @scandir($directory);
+        if (!$files) {
+            return [];
+        }
+
         $result = [];
-        foreach (array_diff(scandir($directory), ['.', '..']) as $file) {
+        foreach (array_diff($files, ['.', '..']) as $file) {
             $file = $directory . DIRECTORY_SEPARATOR . $file;
             if (is_dir($file)) {
                 $result = array_merge($result, $this->getFiles($file));
@@ -41,16 +46,20 @@ final class Router
         $this->routes[$method][$uri] = $controller;
     }
 
-    public function route(string $method, string $uri): string
+    public function route(string $method, string $uri, ?string $body = null): string
     {
         if (!isset($this->routes[$method][$uri])) {
             http_response_code(404);
-            die('Not Found');
+
+            return 'Not found';
         }
 
-        $input = file_get_contents('php://input');
-        if (json_validate($input)) {
-            $parameters = json_decode($input, true);
+        if ($body === null) {
+            $body = file_get_contents('php://input');
+        }
+
+        if (json_validate($body)) {
+            $parameters = json_decode($body, true);
         } elseif ($method === 'POST') {
             $parameters = $_POST;
         } else {

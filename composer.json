@@ -5,7 +5,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "RobertWesner\\SimpleMvcPhp\\": "src/"
+            "RobertWesner\\SimpleMvcPhp\\": "src/",
+            "RobertWesner\\SimpleMvcPhp\\Tests\\": "tests/"
         }
     },
     "authors": [

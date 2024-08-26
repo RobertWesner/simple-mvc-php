@@ -15,6 +15,18 @@ A small library for creating PHP web servers.
 
 ## Installation
 
+### New project
+
+This creates a new project with the required folder structure and is the preferred way to use it.
+
+```bash
+composer create-project robertwesner/simple-mvc-php-template
+```
+
+### Existing project
+
+If you already have a project, require the package and migrate your files manually.
+
 ```bash
 composer require robertwesner/simple-mvc-php "*"
 ```

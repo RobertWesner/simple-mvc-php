@@ -28,8 +28,5 @@
         <include>
             <directory>./src</directory>
         </include>
-        <exclude>
-            <directory>./src/Template/Templates</directory>
-        </exclude>
     </source>
 </phpunit>

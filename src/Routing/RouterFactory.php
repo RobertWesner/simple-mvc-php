@@ -14,7 +14,7 @@ final class RouterFactory
         return self::$router;
     }
 
-    public static function getRouter(?string $routesPath = null): Router
+    public static function getRouter(): Router
     {
         if (!isset(self::$router)) {
             // TODO: exceptions and stuff
