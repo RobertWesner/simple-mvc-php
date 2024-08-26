@@ -19,7 +19,7 @@ final class Route
     {
         if (!isset(self::$twig)) {
             self::$twig = new Environment(
-                new FilesystemLoader(__DIR__ . '/../views'),
+                new FilesystemLoader($_SERVER['DOCUMENT_ROOT'] . '/views'),
             );
         }
 

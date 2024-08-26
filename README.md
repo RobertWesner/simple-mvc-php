@@ -62,7 +62,8 @@ PROJECT_ROOT
 |-- views
 |   '-- twig views
 |-- src
-'-- vendor
+|-- vendor
+'-- route.php
 ```
 
 ### Routing scripts
