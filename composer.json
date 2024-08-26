@@ -1,0 +1,22 @@
+{
+    "name": "robertwesner/simple-mvc-php",
+    "description": "A small library for creating PHP web servers.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "RobertWesner\\SimpleMvcPhp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "RobertWesner",
+            "email": "robert@wesner.io"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "twig/twig": "^3.0",
+        "guzzlehttp/psr7": "^2.7"
+    }
+}
