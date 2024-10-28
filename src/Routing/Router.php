@@ -48,12 +48,6 @@ final class Router
 
     public function route(string $method, string $uri, ?string $body = null): string
     {
-        if (!isset($this->routes[$method][$uri])) {
-            http_response_code(404);
-
-            return 'Not found';
-        }
-
         if ($body === null) {
             $body = file_get_contents('php://input');
         }
@@ -66,10 +60,22 @@ final class Router
             $parameters = $_GET;
         }
 
+        $router = null;
+        foreach ($this->routes[$method] ?? [] as $route => $possibleRouter) {
+            if (preg_match('/^' . str_replace('/', '\/', $route) . '$/', $uri)) {
+                $router = $possibleRouter;
+            }
+        }
+
+        if ($router === null) {
+            http_response_code(404);
+
+            return 'Not found';
+        }
+
         /**
          * @var $router callable(Request $request): ResponseInterface
          */
-        $router = $this->routes[$method][$uri];
         $response = $router(new Request($parameters));
 
         http_response_code($response->getStatusCode());

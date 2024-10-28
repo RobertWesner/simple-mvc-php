@@ -49,5 +49,18 @@ class RouteTest extends TestCase
             JSON
             ),
         );
+
+        self::assertSame('Not found', $router->route('GET', '/something/foo'));
+        Route::get('/something/foo.*', function () {
+            return Route::response('ok');
+        });
+        self::assertSame('ok', $router->route('GET', '/something/foo'));
+        self::assertSame('ok', $router->route('GET', '/something/foo-1234'));
+
+        self::assertSame('Not found', $router->route('GET', '/random-whatever'));
+        Route::get('.*', function () {
+            return Route::response('Whoops, this page isn\'t here!');
+        });
+        self::assertSame('Whoops, this page isn\'t here!', $router->route('GET', '/random-whatever'));
     }
 }
