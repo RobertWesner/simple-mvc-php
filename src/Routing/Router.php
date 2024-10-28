@@ -64,6 +64,8 @@ final class Router
         foreach ($this->routes[$method] ?? [] as ['route' => $route, 'controller' => $controller]) {
             if (preg_match('/^' . str_replace('/', '\/', $route) . '$/', $uri)) {
                 $router = $controller;
+
+                break;
             }
         }
 
