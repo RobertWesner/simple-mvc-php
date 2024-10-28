@@ -37,13 +37,13 @@ final class Router
         }
     }
 
-    public function register(string $method, string $uri, callable $controller): void
+    public function register(string $method, string $route, callable $controller): void
     {
         if (!isset($this->routes[$method])) {
             $this->routes[$method] = [];
         }
 
-        $this->routes[$method][$uri] = $controller;
+        $this->routes[$method][] = ['route' => $route, 'controller' => $controller];
     }
 
     public function route(string $method, string $uri, ?string $body = null): string
@@ -61,9 +61,9 @@ final class Router
         }
 
         $router = null;
-        foreach ($this->routes[$method] ?? [] as $route => $possibleRouter) {
+        foreach ($this->routes[$method] ?? [] as ['route' => $route, 'controller' => $controller]) {
             if (preg_match('/^' . str_replace('/', '\/', $route) . '$/', $uri)) {
-                $router = $possibleRouter;
+                $router = $controller;
             }
         }
 
