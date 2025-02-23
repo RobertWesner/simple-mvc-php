@@ -44,6 +44,8 @@ final readonly class Request
                     $parameter = null;
                 } elseif (filter_var($parameter, FILTER_VALIDATE_INT)) {
                     $parameter = (int)$parameter;
+                } elseif (filter_var($parameter, FILTER_VALIDATE_FLOAT)) {
+                    $parameter = (float)$parameter;
                 } elseif (filter_var($parameter, FILTER_VALIDATE_BOOL)) {
                     $parameter = ['true' => true, 'false' => false][$parameter];
                 }
