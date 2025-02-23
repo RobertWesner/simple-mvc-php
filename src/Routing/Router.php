@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace RobertWesner\SimpleMvcPhp\Routing;
 
 use Psr\Http\Message\ResponseInterface;
@@ -62,7 +64,7 @@ final class Router
 
         $router = null;
         foreach ($this->routes[$method] ?? [] as ['route' => $route, 'controller' => $controller]) {
-            if (preg_match('/^' . str_replace('/', '\/', $route) . '$/', $uri)) {
+            if (preg_match('/^' . str_replace('/', '\/', $route) . '$/', $uri, $matches, PREG_UNMATCHED_AS_NULL)) {
                 $router = $controller;
 
                 break;
@@ -78,7 +80,17 @@ final class Router
         /**
          * @var $router callable(Request $request): ResponseInterface
          */
-        $response = $router(new Request($parameters));
+        $response = $router(
+            new Request(
+                $parameters,
+                array_filter($matches ?? [], fn ($key) => !is_numeric($key), ARRAY_FILTER_USE_KEY)
+            ),
+        );
+
+        if ($response === null) {
+            http_response_code(500);
+            die('No Response provided.');
+        }
 
         http_response_code($response->getStatusCode());
 
@@ -88,6 +100,6 @@ final class Router
             }
         }
 
-        return $response->getBody();
+        return (string)$response->getBody();
     }
 }

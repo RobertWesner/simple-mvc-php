@@ -13,11 +13,29 @@ Simple MVC for PHP
 
 A small library for creating PHP web servers.
 
+Use case: Serving semi-static content; not intended for large scale sites with complex logic.
+
+Initially created for private use in place of Node-JS when creating very simple websites.
+Feel free to use if it fits your needs.
+
+Websites using this:
+- https://scripts.yt
+
+## Features
+
+- Request handling (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`)
+  - Query parameters
+  - JSON parameters
+  - URI parameters
+- Intuitive Syntax
+- Simple to use composer template
+- Integrated Twig templating engine
+
 ## Installation
 
 ### New project
 
-This creates a new project with the required folder structure and is the preferred way to use it.
+This creates a new project with the required folder structure and is the preferred way of use.
 
 ```bash
 composer create-project robertwesner/simple-mvc-php-template
@@ -34,6 +52,10 @@ composer require robertwesner/simple-mvc-php "*"
 ## Configuration
 
 ### nginx
+
+All traffic except for "/public" should be redirected to "/route.php".
+
+Below is a Nginx sample configuration running under Docker.
 
 ```nginx
 server {
@@ -102,7 +124,8 @@ use RobertWesner\SimpleMvcPhp\Route;
 use RobertWesner\SimpleMvcPhp\Routing\Request;
 
 Route::post('/api/login', function (Request $request) {
-    $password = $request->get('password');
+    // Reads either Query or JSON-Body Parameter
+    $password = $request->getParameter('password');
     if ($password === null) {
         return Route::response('Bad Request', 400);
     }
@@ -115,6 +138,13 @@ Route::post('/api/login', function (Request $request) {
 });
 
 Route::post('/api/logout', function () {
+    // ...
+});
+
+// Also able to read URI parameters
+Route::get('/api/users/(?<userId>\d+)', function (Request $request) {
+    $userId = $request->getUriParameter('userId'); // Returns numeric userId from capture group
+
     // ...
 });
 ```
@@ -137,4 +167,21 @@ Route::get('/', function () {
 
 ### Using Controller Classes
 
-TODO: `[$controller, 'getWhatever']` as callable
+More complex Logic can be handled with class controllers.
+
+> Note: This is not recommended. Complex applications should use _more sophisticated_ frameworks.
+
+See: [demo class](./tests/Route/Class/Controller/UserController.php) and [demo routing](./tests/Route/Class/routes/user.php)
+
+```php
+<?php
+
+use RobertWesner\SimpleMvcPhp\Route;
+use RobertWesner\SimpleMvcPhp\Tests\Route\Class\Controller\UserController;
+
+$controller = new UserController();
+Route::get('/api/users', $controller->all(...));
+Route::get('/api/users/(?<userId>\d+)', $controller->get(...));
+Route::post('/api/users', $controller->create(...));
+Route::delete('/api/users/(?<userId>\d+)', $controller->delete(...));
+```

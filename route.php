@@ -1,5 +1,7 @@
 <?php
 
+ declare(strict_types=1);
+
 use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
 
 require __DIR__ . '/vendor/autoload.php';

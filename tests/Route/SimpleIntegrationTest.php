@@ -1,6 +1,8 @@
 <?php
 
-namespace RobertWesner\SimpleMvcPhp\Tests;
+declare(strict_types=1);
+
+namespace RobertWesner\SimpleMvcPhp\Tests\Route;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -14,7 +16,7 @@ use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
 #[UsesClass(Request::class)]
 #[UsesClass(Router::class)]
 #[UsesClass(RouterFactory::class)]
-class RouteTest extends TestCase
+class SimpleIntegrationTest extends TestCase
 {
     public function test(): void
     {
@@ -27,6 +29,7 @@ class RouteTest extends TestCase
         });
         self::assertSame('FUN!', $router->route('GET', '/test'));
 
+        // Method is GET so POST fails with 404
         self::assertSame('Not found', $router->route('POST', '/test'));
 
         Route::post('/api/does-this-work', function (Request $request) {
@@ -57,10 +60,13 @@ class RouteTest extends TestCase
         self::assertSame('ok', $router->route('GET', '/something/foo'));
         self::assertSame('ok', $router->route('GET', '/something/foo-1234'));
 
+        // Test custom 404 page via all-matching RegEx
         self::assertSame('Not found', $router->route('GET', '/random-whatever'));
         Route::get('.*', function () {
-            return Route::response('Whoops, this page isn\'t here!');
+            return Route::response('Whoops, this page isn\'t here!', 404);
         });
         self::assertSame('Whoops, this page isn\'t here!', $router->route('GET', '/random-whatever'));
+        // make sure previous routes still match
+        self::assertSame('ok', $router->route('GET', '/something/foo'));
     }
 }
