@@ -83,7 +83,10 @@ final class Router
         $response = $router(
             new Request(
                 $parameters,
-                array_filter($matches ?? [], fn ($key) => !is_numeric($key), ARRAY_FILTER_USE_KEY)
+                array_map(
+                    urldecode(...),
+                    array_filter($matches ?? [], fn ($key) => !is_numeric($key), ARRAY_FILTER_USE_KEY),
+                ),
             ),
         );
 

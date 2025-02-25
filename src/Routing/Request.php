@@ -22,10 +22,10 @@ final readonly class Request
      */
     public function get(string $parameter, mixed $default = null): mixed
     {
-        return $this->getUriParameter($parameter) ?? $this->getParameter($parameter) ?? $default;
+        return $this->getUriParameter($parameter) ?? $this->getRequestParameter($parameter) ?? $default;
     }
 
-    public function getParameter(string $parameter, mixed $default = null): mixed
+    public function getRequestParameter(string $parameter, mixed $default = null): mixed
     {
         return $this->parameters[$parameter] ?? $default;
     }

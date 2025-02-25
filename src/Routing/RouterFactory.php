@@ -19,7 +19,6 @@ final class RouterFactory
     public static function getRouter(): Router
     {
         if (!isset(self::$router)) {
-            // TODO: exceptions and stuff
             die('Router was not created.');
         }
 
