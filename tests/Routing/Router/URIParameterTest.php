@@ -19,7 +19,7 @@ use RobertWesner\SimpleMvcPhp\Routing\Router;
 #[CoversClass(Router::class)]
 #[UsesClass(Request::class)]
 #[UsesClass(Route::class)]
-class ParameterTest extends TestCase
+class URIParameterTest extends TestCase
 {
     public function test(): void
     {
@@ -31,5 +31,12 @@ class ParameterTest extends TestCase
             return Route::response('');
         });
         $router->route('GET', '/users/1234');
+
+        $router->register('GET', '/demo/(?<test>[^/]+)', function (Request $request) {
+            TestCase::assertSame('Foo Bar 1337 Hello//World', $request->getUriParameter('test'));
+
+            return Route::response('');
+        });
+        $router->route('GET', '/demo/Foo%20Bar%201337%20Hello%2F%2FWorld');
     }
 }

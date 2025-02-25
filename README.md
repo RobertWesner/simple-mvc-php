@@ -117,6 +117,7 @@ PROJECT_ROOT
 ```
 
 api.php
+
 ```php
 <?php
 
@@ -125,7 +126,7 @@ use RobertWesner\SimpleMvcPhp\Routing\Request;
 
 Route::post('/api/login', function (Request $request) {
     // Reads either Query or JSON-Body Parameter
-    $password = $request->getParameter('password');
+    $password = $request->getRequestParameter('password');
     if ($password === null) {
         return Route::response('Bad Request', 400);
     }

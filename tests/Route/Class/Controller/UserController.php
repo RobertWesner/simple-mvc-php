@@ -55,7 +55,7 @@ class UserController
 
     public function create(Request $request): ResponseInterface
     {
-        $username = $request->getParameter('name');
+        $username = $request->getRequestParameter('name');
 
         // Validate username...
 
