@@ -80,4 +80,11 @@ final class Route
             die($e);
         }
     }
+
+    public static function redirect(string $target, int $status = 301): ResponseInterface
+    {
+        return self::response('', $status, [
+            'Location' => $target,
+        ]);
+    }
 }
