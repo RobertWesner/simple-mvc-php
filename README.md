@@ -150,6 +150,11 @@ Route::get('/api/users/(?<userId>\d+)', function (Request $request) {
 
     // ...
 });
+
+// 404 page, FALLBACK will be called when no other route matches
+Route::get(Route::FALLBACK, function (Request $request) {
+    return Route::render('404.twig');
+});
 ```
 
 view.php

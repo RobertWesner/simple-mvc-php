@@ -62,11 +62,17 @@ class SimpleIntegrationTest extends TestCase
 
         // Test custom 404 page via all-matching RegEx
         self::assertSame('Not found', $router->route('GET', '/random-whatever'));
-        Route::get('.*', function () {
+        Route::get(Route::FALLBACK, function () {
             return Route::response('Whoops, this page isn\'t here!', 404);
         });
         self::assertSame('Whoops, this page isn\'t here!', $router->route('GET', '/random-whatever'));
         // make sure previous routes still match
         self::assertSame('ok', $router->route('GET', '/something/foo'));
+
+        // Since v0.7.0 the Route ".*" is stored separately and no longer blocks Routes defined after it
+        Route::get('/still-callable', function () {
+            return Route::response('yes');
+        });
+        self::assertSame('yes', $router->route('GET', '/still-callable'));
     }
 }

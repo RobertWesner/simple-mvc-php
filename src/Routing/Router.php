@@ -5,10 +5,22 @@ declare(strict_types=1);
 namespace RobertWesner\SimpleMvcPhp\Routing;
 
 use Psr\Http\Message\ResponseInterface;
+use RobertWesner\SimpleMvcPhp\Route;
 
 final class Router
 {
     private array $routes = [];
+
+    /**
+     * This was added to prevent Route ".*" from blocking Routes defined afterward.
+     *
+     * This way a 404 Route defined in app.php doesn't block routes in backend.php,
+     * since a... gets loaded before b... and thus the 404 Page would match first.
+     *
+     * @var callable|null
+     * @since v0.7.0
+     */
+    private $fallbackController = null;
 
     private function getFiles(string $directory): array
     {
@@ -41,6 +53,22 @@ final class Router
 
     public function register(string $method, string $route, callable $controller): void
     {
+        if ($route === '.+') {
+            @trigger_error(
+                'Using Route ".+" is highly discouraged. Please use Route::FALLBACK instead.',
+                E_USER_WARNING,
+            );
+
+            // .+ was most likely supposed to be .* anyway
+            $route = Route::FALLBACK;
+        }
+
+        if ($route === Route::FALLBACK) {
+            $this->fallbackController = $controller;
+
+            return;
+        }
+
         if (!isset($this->routes[$method])) {
             $this->routes[$method] = [];
         }
@@ -69,6 +97,10 @@ final class Router
 
                 break;
             }
+        }
+
+        if ($router === null) {
+            $router = $this->fallbackController;
         }
 
         if ($router === null) {

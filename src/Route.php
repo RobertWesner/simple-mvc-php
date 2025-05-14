@@ -15,6 +15,8 @@ use Twig\Loader\FilesystemLoader;
 
 final class Route
 {
+    public const string FALLBACK = '.*';
+
     private static Environment $twig;
 
     private static function getTwig(): Environment
@@ -58,11 +60,11 @@ final class Route
         return new Response($status, $headers, $data);
     }
 
-    public static function json(array $data, int $status = 200): ResponseInterface
+    public static function json(array $data, int $status = 200, array $headers = []): ResponseInterface
     {
-        return self::response(json_encode($data), $status, [
+        return self::response(json_encode($data), $status, array_merge([
             'Content-Type' => 'application/json',
-        ]);
+        ], $headers));
     }
 
     public static function render(string $template, array $arguments = [], int $status = 200): ResponseInterface
