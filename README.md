@@ -35,9 +35,17 @@ Websites using this:
 
 ## Installation
 
+### New Docker project
+
+This creates a Docker PHP-FPM + Nginx Project and is the preferred way of use.
+
+```bash
+composer create-project robertwesner/simple-mvc-php-docker-template
+```
+
 ### New project
 
-This creates a new project with the required folder structure and is the preferred way of use.
+This creates a new project with the required folder structure.
 
 ```bash
 composer create-project robertwesner/simple-mvc-php-template
@@ -48,7 +56,7 @@ composer create-project robertwesner/simple-mvc-php-template
 If you already have a project, require the package and migrate your files manually.
 
 ```bash
-composer require robertwesner/simple-mvc-php "*"
+composer require robertwesner/simple-mvc-php
 ```
 
 ## Configuration
