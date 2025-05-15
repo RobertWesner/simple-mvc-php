@@ -11,6 +11,7 @@ use RobertWesner\SimpleMvcPhp\Route;
 use RobertWesner\SimpleMvcPhp\Routing\Request;
 use RobertWesner\SimpleMvcPhp\Routing\Router;
 use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
+use RobertWesner\SimpleMvcPhp\Tests\Route\Dummy\DummyService;
 
 #[CoversClass(Route::class)]
 #[UsesClass(Request::class)]
@@ -74,5 +75,11 @@ class SimpleIntegrationTest extends TestCase
             return Route::response('yes');
         });
         self::assertSame('yes', $router->route('GET', '/still-callable'));
+
+        // Since v0.8.0 Routes now can have dependencies that automatically get resolved
+        Route::get('/this-route-has-dependencies', function (DummyService $dummyService) {
+            return Route::response((string)$dummyService->getSomething());
+        });
+        self::assertSame('1337', $router->route('GET', '/this-route-has-dependencies'));
     }
 }
