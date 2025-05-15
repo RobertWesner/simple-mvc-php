@@ -7,36 +7,16 @@ namespace RobertWesner\SimpleMvcPhp\Tests\Route\Class\Controller;
 use Psr\Http\Message\ResponseInterface;
 use RobertWesner\SimpleMvcPhp\Route;
 use RobertWesner\SimpleMvcPhp\Routing\Request;
+use RobertWesner\SimpleMvcPhp\Tests\Route\Class\Service\UserService;
 
 /**
  * Small example for complex controllers.
  */
-class UserController
+readonly class UserController
 {
-    private mixed $userService;
-
-    public function __construct()
-    {
-        // Mock of a potential service managing users
-        $this->userService = new class {
-            public function findAll(): array
-            {
-                return [];
-            }
-
-            public function findOneBy(int $id): array
-            {
-                return ['name' => 'foo'];
-            }
-
-            public function create(string $username): array
-            {
-                return ['name' => $username];
-            }
-
-            public function delete(int $id): void {}
-        };
-    }
+    public function __construct(
+        private UserService $userService,
+    ) {}
 
     public function all(): ResponseInterface
     {

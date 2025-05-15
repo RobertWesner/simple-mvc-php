@@ -30,27 +30,27 @@ final class Route
         return self::$twig;
     }
 
-    public static function get(string $uri, callable $controller): void
+    public static function get(string $uri, callable|array $controller): void
     {
         RouterFactory::getRouter()->register('GET', $uri, $controller);
     }
 
-    public static function post(string $uri, callable $controller): void
+    public static function post(string $uri, callable|array $controller): void
     {
         RouterFactory::getRouter()->register('POST', $uri, $controller);
     }
 
-    public static function put(string $uri, callable $controller): void
+    public static function put(string $uri, callable|array $controller): void
     {
         RouterFactory::getRouter()->register('PUT', $uri, $controller);
     }
 
-    public static function patch(string $uri, callable $controller): void
+    public static function patch(string $uri, callable|array $controller): void
     {
         RouterFactory::getRouter()->register('PATCH', $uri, $controller);
     }
 
-    public static function delete(string $uri, callable $controller): void
+    public static function delete(string $uri, callable|array $controller): void
     {
         RouterFactory::getRouter()->register('DELETE', $uri, $controller);
     }

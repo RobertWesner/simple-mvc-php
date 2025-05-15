@@ -13,9 +13,8 @@ Simple MVC for PHP
 
 A small library for creating PHP web servers.
 
-Use case: Serving semi-static content; not intended for large scale sites with complex logic.
-
 Initially created for private use in place of Node-JS when creating very simple websites.
+Now able to run more complex applications.
 Feel free to use if it fits your needs.
 
 Websites using this:
@@ -32,6 +31,7 @@ Websites using this:
 - Intuitive Syntax
 - Simple to use composer template
 - Integrated Twig templating engine
+- [Optional] Autowiring of controller dependencies
 
 ## Installation
 
@@ -57,40 +57,6 @@ If you already have a project, require the package and migrate your files manual
 
 ```bash
 composer require robertwesner/simple-mvc-php
-```
-
-## Configuration
-
-### nginx
-
-All traffic except for "/public" should be redirected to "/route.php".
-
-Below is a Nginx sample configuration running under Docker.
-
-```nginx
-server {
-    index index.php index.html;
-    server_name ...;
-    error_log  /var/log/nginx/error.log;
-    access_log /var/log/nginx/access.log;
-    root /var/www/html;
-
-    proxy_intercept_errors on;
-
-    location / {
-        try_files /public$uri /public /route.php?$query_string;
-    }
-
-    location ~ /route\.php$ {
-        try_files $uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass php-fpm:9000;
-        fastcgi_index index.php;
-        include fastcgi_params;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        fastcgi_param PATH_INFO $fastcgi_path_info;
-    }
-}
 ```
 
 ## Usage
@@ -129,11 +95,6 @@ PROJECT_ROOT
 api.php
 
 ```php
-<?php
-
-use RobertWesner\SimpleMvcPhp\Route;
-use RobertWesner\SimpleMvcPhp\Routing\Request;
-
 Route::post('/api/login', function (Request $request) {
     // Reads either Query or JSON-Body Parameter
     $password = $request->getRequestParameter('password');
@@ -167,11 +128,6 @@ Route::get(Route::FALLBACK, function (Request $request) {
 
 view.php
 ```php
-<?php
-
-use RobertWesner\SimpleMvcPhp\Route;
-use RobertWesner\SimpleMvcPhp\Routing\Request;
-
 Route::get('/', function () {
     // ...
 
@@ -185,19 +141,60 @@ Route::get('/', function () {
 
 More complex Logic can be handled with class controllers.
 
-> Note: This is not recommended. Complex applications should use _more sophisticated_ frameworks.
+Resolving the controller requires [robertwesner/dependency-injection](https://github.com/RobertWesner/dependency-injection).
 
 See: [demo class](./tests/Route/Class/Controller/UserController.php) and [demo routing](./tests/Route/Class/routes/user.php)
 
 ```php
-<?php
+final class UserService
+{
+    // ...
+}
 
-use RobertWesner\SimpleMvcPhp\Route;
-use RobertWesner\SimpleMvcPhp\Tests\Route\Class\Controller\UserController;
+readonly class UserController
+{
+    public function __construct(
+        private UserService $userService,
+    ) {}
 
-$controller = new UserController();
-Route::get('/api/users', $controller->all(...));
-Route::get('/api/users/(?<userId>\d+)', $controller->get(...));
-Route::post('/api/users', $controller->create(...));
-Route::delete('/api/users/(?<userId>\d+)', $controller->delete(...));
+    public function all(): ResponseInterface
+    {
+        // ...
+    }
+
+    public function get(Request $request): ResponseInterface
+    {
+        // ...
+    }
+
+    public function create(Request $request): ResponseInterface
+    {
+        // ...
+    }
+
+    public function delete(Request $request): ResponseInterface
+    {
+        // ...
+    }
+}
+```
+
+```php
+// Note: this requires robertwesner/dependency-injection
+Route::get('/api/users', [UserController::class, 'all']);
+Route::get('/api/users/(?<userId>\d+)', [UserController::class, 'get']);
+Route::post('/api/users', [UserController::class, 'create']);
+Route::delete('/api/users/(?<userId>\d+)', [UserController::class, 'delete']);
+```
+
+### Autowiring
+
+Installing [robertwesner/dependency-injection](https://github.com/RobertWesner/dependency-injection) allows for automatic resolution of Route dependencies:
+
+```php
+// Autowired service class (AuthenticationService) inside Route
+// Note: this requires robertwesner/dependency-injection
+Route::post('/api/admin/some-endpoint', function (Request $request, AuthenticationService $authenticationService) {
+    // ...
+});
 ```
