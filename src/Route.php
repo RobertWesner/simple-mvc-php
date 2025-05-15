@@ -6,6 +6,7 @@ namespace RobertWesner\SimpleMvcPhp;
 
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
+use RobertWesner\SimpleMvcPhp\Exception\TwigException;
 use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -67,6 +68,9 @@ final class Route
         ], $headers));
     }
 
+    /**
+     * @throws TwigException
+     */
     public static function render(string $template, array $arguments = [], int $status = 200): ResponseInterface
     {
         try {
@@ -77,9 +81,8 @@ final class Route
                     'Content-Type' => 'text/html',
                 ],
             );
-        } catch (LoaderError | RuntimeError | SyntaxError $e) {
-            // TODO: proper error handling would be great
-            die($e);
+        } catch (LoaderError | RuntimeError | SyntaxError $exception) {
+            throw new TwigException('Could not render twig template.', previous: $exception);
         }
     }
 

@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use ReflectionFunction;
+use RobertWesner\SimpleMvcPhp\Exception\RouterException;
 use RobertWesner\SimpleMvcPhp\Route;
 
 final class Router
@@ -64,6 +65,9 @@ final class Router
         $this->routes[$method][] = ['route' => $route, 'controller' => $controller];
     }
 
+    /**
+     * @throws RouterException
+     */
     public function route(string $method, string $uri, ?string $body = null): string
     {
         if ($body === null) {
@@ -104,27 +108,34 @@ final class Router
 
         if (!is_callable($router)) {
             if (class_exists($router[0])) {
+                if ($this->container === null) {
+                    throw new RouterException(sprintf(
+                        'Could not autowire controller "%s". Please use robertwenser/dependency-injection.',
+                        $router[0],
+                    ));
+                }
+
                 try {
                     $router[0] = $this->container->get($router[0]);
                     $router = $router(...);
                 } catch (ContainerExceptionInterface $exception) {
-                    die(sprintf(
+                    throw new RouterException(sprintf(
                         'Autowired controller "%s" could not be loaded from container.',
                         $router[0],
-                    )); // TODO: proper error handling
+                    ));
                 }
             } else {
-                die(sprintf(
+                throw new (sprintf(
                     'Invalid router class "%s".',
                     $router[0],
-                )); // TODO: proper error handling
+                ));
             }
         }
 
         try {
             $function = new ReflectionFunction($router);
         } catch (ReflectionException $exception) {
-            die($exception); // TODO: proper error handling
+            throw new RouterException('Could not reflect function.', previous: $exception);
         }
 
         $routerParameters = [];
@@ -136,21 +147,21 @@ final class Router
             }
 
             if ($this->container === null) {
-                die(sprintf(
+                throw new RouterException(sprintf(
                     'Could not autowire parameter "%s" of type "%s". Please use robertwenser/dependency-injection.',
                     $parameter->getName(),
                     $parameter->getType()->getName(),
-                )); // TODO: proper error handling
+                ));
             }
 
             try {
                 $routerParameters[] = $this->container->get($parameter->getType()->getName());
             } catch (ContainerExceptionInterface $exception) {
-                die(sprintf(
+                throw new RouterException(sprintf(
                     'Autowired class "%s" of type "%s" could not be loaded from container.',
                     $parameter->getName(),
                     $parameter->getType()->getName(),
-                )); // TODO: proper error handling
+                ));
             }
         }
 
