@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use RobertWesner\SimpleMvcPhp\Route;
+use RobertWesner\SimpleMvcPhp\Routing\ContainerFactory;
 use RobertWesner\SimpleMvcPhp\Routing\Request;
 use RobertWesner\SimpleMvcPhp\Routing\Router;
 use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
@@ -16,6 +17,7 @@ use RobertWesner\SimpleMvcPhp\Tests\Route\Dummy\DummyService;
 #[CoversClass(Route::class)]
 #[UsesClass(Request::class)]
 #[UsesClass(Router::class)]
+#[UsesClass(ContainerFactory::class)]
 #[UsesClass(RouterFactory::class)]
 class SimpleIntegrationTest extends TestCase
 {

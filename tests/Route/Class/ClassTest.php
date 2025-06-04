@@ -6,6 +6,7 @@ namespace RobertWesner\SimpleMvcPhp\Tests\Route\Class;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
+use RobertWesner\SimpleMvcPhp\Routing\ContainerFactory;
 use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
 
 #[CoversNothing]
@@ -13,6 +14,7 @@ class ClassTest extends TestCase
 {
     public function test(): void
     {
+        ContainerFactory::createContainer();
         $router = RouterFactory::createRouter(__DIR__ . '/routes');
 
         self::assertSame(
