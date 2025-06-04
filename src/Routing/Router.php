@@ -122,7 +122,7 @@ final class Router
                     throw new RouterException(sprintf(
                         'Autowired controller "%s" could not be loaded from container.',
                         $router[0],
-                    ));
+                    ), previous: $exception);
                 }
             } else {
                 throw new (sprintf(
@@ -161,7 +161,7 @@ final class Router
                     'Autowired class "%s" of type "%s" could not be loaded from container.',
                     $parameter->getName(),
                     $parameter->getType()->getName(),
-                ));
+                ), previous: $exception);
             }
         }
 
