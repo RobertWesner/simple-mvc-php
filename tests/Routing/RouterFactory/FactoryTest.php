@@ -17,6 +17,7 @@ use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
 #[UsesClass(Router::class)]
 #[UsesClass(Route::class)]
 #[UsesClass(Request::class)]
+#[UsesClass(ContainerFactory::class)]
 class FactoryTest extends TestCase
 {
     public function test(): void

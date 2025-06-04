@@ -23,6 +23,8 @@ class SimpleIntegrationTest extends TestCase
 {
     public function test(): void
     {
+        define('__BASE_DIR__', __DIR__);
+
         $router = RouterFactory::createRouter('/dev/null');
 
         self::assertSame('Not found', $router->route('GET', '/test'));
@@ -83,5 +85,12 @@ class SimpleIntegrationTest extends TestCase
             return Route::response((string)$dummyService->getSomething());
         });
         self::assertSame('1337', $router->route('GET', '/this-route-has-dependencies'));
+
+        Route::get('/demopage', function () {
+            return Route::render('foo.twig', [
+                'world' => 'Earth',
+            ]);
+        });
+        self::assertSame("Hello Earth!\n", $router->route('GET', '/demopage'));
     }
 }
