@@ -11,7 +11,7 @@ final class RouterFactory
     public static function createRouter(?string $routesPath = null): Router
     {
         self::$router = new Router(ContainerFactory::getContainer());
-        self::$router->setUp($routesPath ?? $_SERVER['DOCUMENT_ROOT'] . '/routes');
+        self::$router->setUp($routesPath ?? __BASE_DIR__ . '/routes');
 
         return self::$router;
     }
