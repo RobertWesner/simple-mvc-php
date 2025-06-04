@@ -231,7 +231,7 @@ Loads external bundles (implementing [BundleInterface](./src/Bundles/BundleInter
 
 > Feel free to store configurations for your bundles in a **subfolder** inside `$PROJECT_ROOT$/configuration`.
 > 
-> Example: `$PROJECT_ROOT$/configuration/database/database.yml`
+> Example: `$PROJECT_ROOT$/configurations/database/database.yml`
 
 ```php
 Configuration::BUNDLES

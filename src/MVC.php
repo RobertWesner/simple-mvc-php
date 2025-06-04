@@ -30,12 +30,12 @@ final class MVC
         // Creates Container if dependency was included
         ContainerFactory::createContainer();
 
-        if (file_exists(__BASE_DIR__ . '/configuration/container.php')) {
-            require __BASE_DIR__ . '/configuration/container.php';
+        if (file_exists(__BASE_DIR__ . '/configurations/container.php')) {
+            require __BASE_DIR__ . '/configurations/container.php';
         }
 
-        if (file_exists(__BASE_DIR__ . '/configuration/bundles.php')) {
-            require __BASE_DIR__ . '/configuration/bundles.php';
+        if (file_exists(__BASE_DIR__ . '/configurations/bundles.php')) {
+            require __BASE_DIR__ . '/configurations/bundles.php';
         }
     }
 }
