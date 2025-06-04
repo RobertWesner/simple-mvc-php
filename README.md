@@ -32,6 +32,7 @@ Websites using this:
 - Simple to use composer template
 - Integrated Twig templating engine
 - [Optional] Autowiring of controller dependencies
+- [Optional] Ability to load external bundles
 
 ## Installation
 
@@ -197,4 +198,44 @@ Installing [robertwesner/dependency-injection](https://github.com/RobertWesner/d
 Route::post('/api/admin/some-endpoint', function (Request $request, AuthenticationService $authenticationService) {
     // ...
 });
+```
+
+### Configuration
+
+Configurations are optional and stored in `$PROJECT_ROOT$/configuration`, written in PHP.
+
+You can run this server with zero configuration if you do not need the following features.
+
+#### Container 
+
+File: `container.php`
+
+Configures additional autowiring steps if you intend to use `robertwesner/dependency-injection` in complex use cases.
+You can manually define container instances with this configuration.
+
+```php
+Configuration::CONTAINER
+    // Either let the container do all the heavy lifting via class names,
+    // MySQLEntityManager would be automatically instantiated by the container.
+    // This is necessary for usage of interfaces, rather than implementations.
+    ::instantiate(EntityManagerInterface::class, MySQLEntityManager::class)
+    // Or pass your own instance when necessary, since Bar is not to be autowired.
+    ::register(FooInterface::class, new Bar('SOME VALUE'));
+```
+
+#### Bundles
+
+File `bundles.php`
+
+Loads external bundles (implementing [BundleInterface](./src/Bundles/BundleInterface.php)) which may configure their own Container values.
+
+> Feel free to store configurations for your bundles in a **subfolder** inside `$PROJECT_ROOT$/configuration`.
+> 
+> Example: `$PROJECT_ROOT$/configurations/database/database.yml`
+
+```php
+Configuration::BUNDLES
+    ::load(FooBundle::class)
+    // Optionally with additional configuration of any type, depending on the bundle.
+    ::load(BarBundle::class, ['faz' => 'baz']);
 ```

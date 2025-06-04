@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use RobertWesner\SimpleMvcPhp\Route;
+use RobertWesner\SimpleMvcPhp\Routing\ContainerFactory;
 use RobertWesner\SimpleMvcPhp\Routing\Request;
 use RobertWesner\SimpleMvcPhp\Routing\Router;
 use RobertWesner\SimpleMvcPhp\Routing\RouterFactory;
@@ -16,11 +17,14 @@ use RobertWesner\SimpleMvcPhp\Tests\Route\Dummy\DummyService;
 #[CoversClass(Route::class)]
 #[UsesClass(Request::class)]
 #[UsesClass(Router::class)]
+#[UsesClass(ContainerFactory::class)]
 #[UsesClass(RouterFactory::class)]
 class SimpleIntegrationTest extends TestCase
 {
     public function test(): void
     {
+        define('__BASE_DIR__', __DIR__);
+
         $router = RouterFactory::createRouter('/dev/null');
 
         self::assertSame('Not found', $router->route('GET', '/test'));
@@ -81,5 +85,12 @@ class SimpleIntegrationTest extends TestCase
             return Route::response((string)$dummyService->getSomething());
         });
         self::assertSame('1337', $router->route('GET', '/this-route-has-dependencies'));
+
+        Route::get('/demopage', function () {
+            return Route::render('foo.twig', [
+                'world' => 'Earth',
+            ]);
+        });
+        self::assertSame("Hello Earth!\n", $router->route('GET', '/demopage'));
     }
 }
