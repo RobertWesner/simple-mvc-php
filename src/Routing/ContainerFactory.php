@@ -21,10 +21,6 @@ final class ContainerFactory
 
     public static function getContainer(): ?Container
     {
-        if (!isset(self::$container)) {
-            die('Container was not created.');
-        }
-
         return self::$container;
     }
 }
