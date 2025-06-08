@@ -239,3 +239,26 @@ Configuration::BUNDLES
     // Optionally with additional configuration of any type, depending on the bundle.
     ::load(BarBundle::class, ['faz' => 'baz']);
 ```
+
+### Error handling
+
+Requires the use of configuration files, refer to the previous section for mor information.
+
+Use your preferred ThrowableHandler by instantiating it as `ThrowableHandlerInterface`.
+By default, without registering a handler, no exception information will be stored or printed.
+
+Example: PrintThrowableHandler outputs directly to the browser
+
+```php
+Configuration::CONTAINER
+    ::instantiate(ThrowableHandlerInterface::class, PrintThrowableHandler::class);
+```
+
+Example: StdoutThrowableHandler outputs into the server stdout and doesn't leak to the browser 
+
+```php
+Configuration::CONTAINER
+    ::instantiate(ThrowableHandlerInterface::class, StdoutThrowableHandler::class);
+```
+
+You can implement your own handler quite easily for additional tasks like sending automated mails. 
