@@ -254,11 +254,11 @@ Configuration::CONTAINER
     ::instantiate(ThrowableHandlerInterface::class, PrintThrowableHandler::class);
 ```
 
-Example: StdoutThrowableHandler outputs into the server stdout and doesn't leak to the browser 
+Example: StdoutThrowableHandler outputs into the server stderr and doesn't leak to the browser 
 
 ```php
 Configuration::CONTAINER
-    ::instantiate(ThrowableHandlerInterface::class, StdoutThrowableHandler::class);
+    ::instantiate(ThrowableHandlerInterface::class, StderrThrowableHandler::class);
 ```
 
 You can implement your own handler quite easily for additional tasks like sending automated mails. 
