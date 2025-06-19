@@ -11,7 +11,7 @@ class StderrThrowableHandler implements ThrowableHandlerInterface
     public function handle(Throwable $throwable): void
     {
         file_put_contents('php://stderr', sprintf(
-            '[%s] Uncaught %s',
+            "[%s] Uncaught %s\n",
             date('Y-m-d h:i:s'),
             $throwable,
         ));
