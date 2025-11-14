@@ -202,7 +202,7 @@ Route::post('/api/admin/some-endpoint', function (Request $request, Authenticati
 
 ### Configuration
 
-Configurations are optional and stored in `$PROJECT_ROOT$/configuration`, written in PHP.
+Configurations are optional and stored in `$PROJECT_ROOT$/configurations`, written in PHP.
 
 You can run this server with zero configuration if you do not need the following features.
 
@@ -254,7 +254,7 @@ Configuration::CONTAINER
     ::instantiate(ThrowableHandlerInterface::class, PrintThrowableHandler::class);
 ```
 
-Example: StdoutThrowableHandler outputs into the server stderr and doesn't leak to the browser 
+Example: StderrThrowableHandler outputs into the server stderr and doesn't leak to the browser 
 
 ```php
 Configuration::CONTAINER
